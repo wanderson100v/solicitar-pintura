@@ -1,4 +1,5 @@
-import 'package:app/src/home/home-widget.dart';
+import 'package:app/src/client/dashboard/dashboeard-widget.dart';
+import 'package:app/src/painter/dashboard/dashboeard-widget.dart';
 import 'package:app/src/register/select-user-type/select-user-type-widget.dart';
 import 'package:flutter/material.dart';
 
@@ -30,7 +31,8 @@ class LoginForm extends StatefulWidget {
 class _LoginFormState extends State<LoginForm> {
   
   final _formKey = GlobalKey<FormState>();
-  
+  final TextEditingController _loginFieldController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -50,17 +52,18 @@ class _LoginFormState extends State<LoginForm> {
   }
 
   Widget _buildLoginWidget(){
-     return _buildTextFieldContainer("Login", false, "Login não informado");
+     return _buildTextFieldContainer("Login", false, "Login não informado", controller :_loginFieldController );
   }
 
   Widget _buildPasswordWidget(){
     return _buildTextFieldContainer("Senha", true, "Senha não informada");
   }
 
-  Widget _buildTextFieldContainer(String labelText, bool obscureText, String validation){
+  Widget _buildTextFieldContainer(String labelText, bool obscureText, String validation, {controller}){
     Padding textFieldContainer = Padding( 
         padding: EdgeInsets.fromLTRB(20,10,20,10),
         child: TextFormField(
+          controller: controller,
           obscureText: obscureText,
           decoration: InputDecoration(
             labelText: labelText,
@@ -89,10 +92,20 @@ class _LoginFormState extends State<LoginForm> {
           RaisedButton(
             onPressed: () {
               if(_formKey.currentState.validate()){
-                Navigator.push(
-                  context, 
-                  MaterialPageRoute(builder :(context) =>HomeWidget())
-                );
+                Widget dashBoard;
+                if(_loginFieldController.text =="pintor")
+                  dashBoard = PainterDashboardWidget();
+                else if(_loginFieldController.text =="cliente")
+                  dashBoard = ClientDashboardWidget();
+                if(dashBoard != null)
+                  Navigator.push(
+                    context, 
+                    MaterialPageRoute(
+                      builder :(context) => dashBoard
+                  ));
+                else
+                 Scaffold.of(context)
+                      .showSnackBar(SnackBar(content: Text('Usuário inválido')));
               }
             },
             child: Text("Entrar")
