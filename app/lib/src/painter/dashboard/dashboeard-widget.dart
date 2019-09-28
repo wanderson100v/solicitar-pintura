@@ -1,4 +1,5 @@
 import 'package:app/src/login/login-widget.dart';
+import 'package:app/src/painter/portfolio/portfolio-widget.dart';
 import 'package:app/src/profile/profile-widget.dart';
 import "package:flutter/material.dart";
 import "package:bubble_bottom_bar/bubble_bottom_bar.dart";
@@ -14,13 +15,10 @@ class _PainterDashboardWidgetState extends State<PainterDashboardWidget> {
   static const TextStyle optionStyle = TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   static List<Widget> _widgetOptions = <Widget>[
     Text(
-      'Index 0: op1',
+      'Solictações',
       style: optionStyle,
     ),
-    Text(
-      'Index 1: op2',
-      style: optionStyle,
-    ),
+    PortfolioWidget(),
     ProfileWidget()
   ];
 
@@ -68,8 +66,8 @@ class _PainterDashboardWidgetState extends State<PainterDashboardWidget> {
         hasInk: true, //new, gives a cute ink effect
         inkColor: Colors.black12, //optional, uses theme color if not specified
         items: <BubbleBottomBarItem>[
-           _buildBubbleBottomBarItem("Inicio", Icons.home,),
            _buildBubbleBottomBarItem("Solicitações", Icons.send),
+           _buildBubbleBottomBarItem("Portifólio", Icons.folder_shared),
            _buildBubbleBottomBarItem("Perfil", Icons.person)
         ],
       )

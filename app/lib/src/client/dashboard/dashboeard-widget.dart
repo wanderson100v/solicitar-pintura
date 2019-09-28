@@ -14,10 +14,6 @@ class _ClientDashboardWidgetState extends State<ClientDashboardWidget> {
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   static List<Widget> _widgetOptions = <Widget>[
     Text(
-      'Inicio',
-      style: optionStyle,
-    ),
-    Text(
       'Solicitações',
       style: optionStyle,
     ),
@@ -73,7 +69,6 @@ class _ClientDashboardWidgetState extends State<ClientDashboardWidget> {
           hasInk: true,
           inkColor: Colors.black12, 
           items: <BubbleBottomBarItem>[
-           _buildBubbleBottomBarItem("Inicio", Icons.home,),
            _buildBubbleBottomBarItem("Solicitações", Icons.send),
            _buildBubbleBottomBarItem("Perfil", Icons.person)
           ],
