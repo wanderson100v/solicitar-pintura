@@ -1,3 +1,4 @@
+import 'package:app/src/login/login-widget.dart';
 import 'package:app/src/profile/profile-widget.dart';
 import "package:flutter/material.dart";
 import "package:bubble_bottom_bar/bubble_bottom_bar.dart";
@@ -26,6 +27,25 @@ class _ClientDashboardWidgetState extends State<ClientDashboardWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        drawer: Drawer(
+          child: ListView(
+            children : <Widget>[
+              DrawerHeader(
+                child :Text("Menu"),
+                decoration: BoxDecoration(
+                  color: Colors.cyan
+                ),
+              ),
+              ListTile(
+                title: Text("Sair"),
+                onTap: ()=>{
+                  Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(builder: (context)=>LoginWidget()))
+                },
+              )
+            ],
+          ),
+        ),
         appBar: AppBar(
           title: Text("Cliente app"),
           centerTitle: true,
@@ -36,17 +56,22 @@ class _ClientDashboardWidgetState extends State<ClientDashboardWidget> {
             child: _widgetOptions.elementAt(_selectedIndex),
           ),
         ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: ()=>{},
+          child: Icon(Icons.add),
+          backgroundColor: Colors.red,
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
         bottomNavigationBar: BubbleBottomBar(
           opacity: .2,
           currentIndex: _selectedIndex,
           onTap: (index) => setState(() => _selectedIndex = index),
           borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
           elevation: 8,
-          //fabLocation: BubbleBottomBarFabLocation., //new
-          hasNotch: true, //new
-          hasInk: true, //new, gives a cute ink effect
-          inkColor:
-              Colors.black12, //optional, uses theme color if not specified
+          fabLocation: BubbleBottomBarFabLocation.end, 
+          hasNotch: true, 
+          hasInk: true,
+          inkColor: Colors.black12, 
           items: <BubbleBottomBarItem>[
            _buildBubbleBottomBarItem("Inicio", Icons.home,),
            _buildBubbleBottomBarItem("Solicitações", Icons.send),
@@ -59,7 +84,7 @@ class _ClientDashboardWidgetState extends State<ClientDashboardWidget> {
     return BubbleBottomBarItem(
         backgroundColor: Colors.indigo,
         icon: Icon(
-          Icons.folder_open,
+          icon,
           color: Colors.black,
         ),
         activeIcon: Icon(

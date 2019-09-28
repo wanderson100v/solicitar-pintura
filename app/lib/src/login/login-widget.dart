@@ -93,16 +93,14 @@ class _LoginFormState extends State<LoginForm> {
             onPressed: () {
               if(_formKey.currentState.validate()){
                 Widget dashBoard;
-                if(_loginFieldController.text =="pintor")
+                if(_loginFieldController.text =="p")
                   dashBoard = PainterDashboardWidget();
-                else if(_loginFieldController.text =="cliente")
+                else if(_loginFieldController.text =="c")
                   dashBoard = ClientDashboardWidget();
                 if(dashBoard != null)
-                  Navigator.push(
-                    context, 
+                  Navigator.pushReplacement(context, 
                     MaterialPageRoute(
-                      builder :(context) => dashBoard
-                  ));
+                        builder :(context) => dashBoard));
                 else
                  Scaffold.of(context)
                       .showSnackBar(SnackBar(content: Text('Usuário inválido')));

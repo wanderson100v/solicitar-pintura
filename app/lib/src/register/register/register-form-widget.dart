@@ -1,5 +1,5 @@
+import 'package:app/src/default-widgets/text-form-field-widget.dart';
 import 'package:app/src/login/login-widget.dart';
-import 'package:app/src/register/select-user-type/select-user-type-widget.dart';
 import 'package:flutter/material.dart';
 
 class RegisterFormWidget extends StatelessWidget {
@@ -73,46 +73,26 @@ class _MyFormState extends State<MyForm> {
   }
   
   Widget _buildLoginWidget(){
-     return _buildTextFieldContainer("Login", false, validation : "Login não informado");
+     return TextFormFieldWidget("Login", false,  "Login não informado");
   }
 
   Widget _buildPasswordWidget(){
-    return _buildTextFieldContainer("Senha", true, validation :"Senha não informada");
+    return TextFormFieldWidget("Senha", true, "Senha não informada");
   }
   
   Widget _buildConfirmPasswordWidget(){
-    return _buildTextFieldContainer("Confirmação de senha", true, validation :"Confirmação da senha não informada");
+    return TextFormFieldWidget("Confirmação de senha", true, "Confirmação da senha não informada");
   }
 
   Widget _buildNameWidget(){
-    return _buildTextFieldContainer("Nome completo", true, validation :"Nome completo não informado");
+    return TextFormFieldWidget("Nome completo", true, "Nome completo não informado");
   }
 
   Widget _buildEmailWidget(){
-    return _buildTextFieldContainer("E-mail", true);
+    return TextFormFieldWidget("E-mail", true, "");
   }
 
   Widget _buildTelWidget(){
-    return _buildTextFieldContainer("Telefone", true);
-  }
-
-
-  Widget _buildTextFieldContainer(String labelText, bool obscureText, {String validation}){
-    Padding textFieldContainer = Padding( 
-        padding: EdgeInsets.fromLTRB(20,10,20,10),
-        child: TextFormField(
-          obscureText: obscureText,
-          decoration: InputDecoration(
-            labelText: labelText,
-          ),
-          validator: (value) {
-            if (validation != null && value.isEmpty) {
-              return validation;
-            }
-            return null;
-          },
-        ),
-      );
-    return textFieldContainer;
+    return TextFormFieldWidget("Telefone", true, "");
   }
 }

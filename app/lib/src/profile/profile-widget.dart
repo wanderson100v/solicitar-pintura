@@ -1,3 +1,4 @@
+import 'package:app/src/profile/edit/profile/edit-profile-widget.dart';
 import 'package:flutter/material.dart';
 
 class ProfileWidget extends StatelessWidget {
@@ -7,7 +8,7 @@ class ProfileWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
         child: Column(children: <Widget>[
-      _buildNameWidget("Nome de usuário"),
+      _buildNameWidget(context,"Nome de usuário"),
       Container(
         padding: EdgeInsets.symmetric(horizontal: 20),
         child: Column(
@@ -30,7 +31,7 @@ class ProfileWidget extends StatelessWidget {
     ]));
   }
 
-  Widget _buildNameWidget(String name) {
+  Widget _buildNameWidget(context,String name) {
     Row row = Row(
         children: <Widget>[
           Icon(Icons.person, size: 64, color: Colors.blue),
@@ -38,7 +39,9 @@ class ProfileWidget extends StatelessWidget {
               padding: EdgeInsets.only(left: 10),
               child: Text(name, style: TextStyle(fontSize: 20))),
           IconButton(
-            onPressed: ()=>{},
+            onPressed: ()=>
+              Navigator.of(context).push(MaterialPageRoute(builder :(context) =>EditProfileWidget()))
+            ,
             icon: Icon(Icons.edit, size: 20,),
           )
         ],
