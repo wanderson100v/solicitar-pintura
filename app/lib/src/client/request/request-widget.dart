@@ -1,4 +1,5 @@
 
+import 'package:app/src/client/request/painter-details/painter-details-widget.dart';
 import 'package:app/src/default-widgets/label-description-widget.dart';
 import 'package:app/src/default-widgets/text-form-field-widget.dart';
 import 'package:app/src/painter/portfolio/portfolio-widget.dart';
@@ -58,64 +59,38 @@ class _RequestWidgetState extends State<RequestWidget> {
               headerBuilder: (BuildContext context, bool isExpanded) {
                 return ListTile(
                     leading: Icon(Icons.format_paint),
-                    title: Text(painter.name), 
+                    title:Text(painter.name),
                     subtitle: Text(painter.description)
                   );
               },
-              body: Column(children: <Widget>[    
-                Padding(
-                  padding: EdgeInsets.only(bottom: 10),
-                  child: Text("Valores cobrados", style: TextStyle(fontSize: 18),),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(left: 10),
-                  child :LabelDescriptionWidget("Diária", painter.dayliValue.toString())
-                ),
-                Padding(
-                  padding: EdgeInsets.only(left: 10),
-                  child :LabelDescriptionWidget("Metro quadrado", painter.squareMeterValue.toString()),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: 10),
-                  child: Text("Portifólio", style: TextStyle(fontSize: 18),),
-                ),
-                Container(
-                  padding :EdgeInsets.all(10),
-                  child: _buildPortifolioExpansionPanelListWidget(painter.services)
-                )
-              ]),
+              body: Padding(
+                padding: EdgeInsets.all(10),
+                child:Column(children: <Widget>[    
+                  Text("Valores cobrados", style: TextStyle(fontSize: 18),),
+                  LabelDescriptionWidget("Diária", painter.dayliValue.toString()),
+                  LabelDescriptionWidget("Metro quadrado", painter.squareMeterValue.toString()),
+                  Row( 
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children : <Widget>[
+                      Expanded(child: Container()),
+                      IconButton(
+                        icon: Icon(Icons.description),
+                        onPressed: (){
+                          Navigator.of(context).push(MaterialPageRoute(builder:(context)=>PainterDetailsWidget(painter)));
+                        },
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.send),
+                        onPressed: (){},
+                      )
+                    ]
+                  )
+              ])),
               isExpanded: painter.isExpanded);
         }).toList());
   }
 
-  ExpansionPanelList _buildPortifolioExpansionPanelListWidget(List<Service> services){
-    return ExpansionPanelList(
-      expansionCallback: (int index, bool isExpanded) {
-          setState(() {
-            services[index].isExpanded = !isExpanded;
-          });
-        },
-        children: services.map<ExpansionPanel>((Service service) {
-          return ExpansionPanel(
-              headerBuilder: (BuildContext context, bool isExpanded) {
-                return ListTile(
-                    title: Text(service.headerValue),
-                  );
-              },
-              body: Column(children: <Widget>[    
-                Text(service.expandedValue),
-                Text("Imagens", style: TextStyle(fontSize: 18),),
-                Row(
-                  children: <Widget>[
-                    Icon(Icons.image, size: 90),
-                    Icon(Icons.image, size: 90),
-                    Icon(Icons.image, size: 90),
-                  ],
-                ),
-              ]),
-              isExpanded: service.isExpanded);
-        }).toList());
-  }
+  
 }
 
 class Painter{

@@ -73,13 +73,6 @@ class _PortfolioWidgetState extends State<PortfolioWidget> {
                     Icon(Icons.image, size: 90),
                   ],
                 ),
-                Row(
-                  children: <Widget>[
-                    Icon(Icons.image, size: 90),
-                    Icon(Icons.image, size: 90),
-                    Icon(Icons.image, size: 90),
-                  ],
-                )
               ])),
               isExpanded: service.isExpanded);
         }).toList(),
