@@ -1,4 +1,5 @@
 import 'package:app/src/login/login-widget.dart';
+import 'package:app/src/painter/values/values-widget.dart';
 import 'package:app/src/painter/portfolio/portfolio-widget.dart';
 import 'package:app/src/profile/profile-widget.dart';
 import "package:flutter/material.dart";
@@ -19,7 +20,10 @@ class _PainterDashboardWidgetState extends State<PainterDashboardWidget> {
       style: optionStyle,
     ),
     PortfolioWidget(),
-    ProfileWidget()
+    Column(children: <Widget>[
+      ProfileWidget(),
+      ValuesWidget(),
+    ],)
   ];
 
   @override
