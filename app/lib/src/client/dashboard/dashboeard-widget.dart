@@ -1,3 +1,4 @@
+import 'package:app/src/client/request/request-widget.dart';
 import 'package:app/src/login/login-widget.dart';
 import 'package:app/src/profile/profile-widget.dart';
 import "package:flutter/material.dart";
@@ -53,7 +54,10 @@ class _ClientDashboardWidgetState extends State<ClientDashboardWidget> {
           ),
         ),
         floatingActionButton: FloatingActionButton(
-          onPressed: ()=>{},
+          onPressed: ()=>{
+            Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context)=>RequestWidget()))
+          },
           child: Icon(Icons.add),
           backgroundColor: Colors.red,
         ),
