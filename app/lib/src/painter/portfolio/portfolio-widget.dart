@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:app/src/painter/portfolio/edit/edit-portfolio.dart';
+import 'package:app/src/painter/portfolio/edit/portfolio/edit-portfolio-widget.dart';
 import 'package:flutter/material.dart';
 
 class PortfolioWidget extends StatefulWidget {
@@ -47,12 +47,12 @@ class _PortfolioWidgetState extends State<PortfolioWidget> {
                   IconButton(
                     icon: Icon(Icons.edit),
                     onPressed: ()=>{
-                      Navigator.of(context).push(MaterialPageRoute(builder:(context)=>EditPortfolioWidget(service)))
+                      Navigator.of(context).push(MaterialPageRoute(builder:(context)=>EditPortfolioWidget()))
                     },
                   ),
                   IconButton(
                     icon: Icon(Icons.delete),
-                    onPressed: ()=>_deleteAlert(context)
+                    onPressed: ()=>_deleteAlert(context, service)
                   ),
                   ]
                 );
@@ -87,25 +87,29 @@ class _PortfolioWidgetState extends State<PortfolioWidget> {
     ]));
   }
 
-  Future<void> _deleteAlert(context) async {
+  Future<void> _deleteAlert(context,service) async {
     return showDialog<void>(
       context: context,
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Rewind and remember'),
+          title: Text('Remover serviço do portífólio?'),
           content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                Text('You will never be satisfied.'),
-                Text('You\’re like me. I’m never satisfied.'),
-              ],
-            ),
+            child: Text('Todos os dados referentes ao portifólio do serviço serão arquivados'),
           ),
           actions: <Widget>[
             FlatButton(
-              child: Text('Regret'),
+              child: Text('cancelar'),
               onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            FlatButton(
+              child: Text('Remover'),
+              onPressed: () {
+                setState((){
+                  _data.remove(service);
+                });
                 Navigator.of(context).pop();
               },
             ),
