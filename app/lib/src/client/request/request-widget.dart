@@ -1,5 +1,6 @@
 
 import 'package:app/src/client/request/painter-details/painter-details-widget.dart';
+import 'package:app/src/client/request/request-quot/request-quot-widget.dart';
 import 'package:app/src/default-widgets/label-description-widget.dart';
 import 'package:app/src/default-widgets/text-form-field-widget.dart';
 import 'package:app/src/painter/portfolio/portfolio-widget.dart';
@@ -81,7 +82,9 @@ class _RequestWidgetState extends State<RequestWidget> {
                       ),
                       IconButton(
                         icon: Icon(Icons.send),
-                        onPressed: (){},
+                        onPressed: (){
+                          Navigator.of(context).push(MaterialPageRoute(builder:(context)=>RequestQuot()));
+                        },
                       )
                     ]
                   )

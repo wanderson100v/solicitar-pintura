@@ -1,3 +1,4 @@
+import 'package:app/src/client/request/request-quot/request-quot-widget.dart';
 import 'package:app/src/client/request/request-widget.dart';
 import 'package:app/src/default-widgets/label-description-widget.dart';
 import 'package:app/src/painter/portfolio/portfolio-widget.dart';
@@ -35,6 +36,12 @@ class _PainterDetailsWidgetState extends State<PainterDetailsWidget> {
             _buildPortifolioExpansionPanelListWidget(widget.painter.services)
           ],
         )
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.send),
+        onPressed: (){
+          Navigator.of(context).push(MaterialPageRoute(builder:(context)=>RequestQuot()));
+        },
       ),
     );
   }
