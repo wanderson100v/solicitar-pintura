@@ -1,5 +1,6 @@
 import 'package:app/src/client/request/request-widget.dart';
 import 'package:app/src/login/login-widget.dart';
+import 'package:app/src/client/solicitation/solicitation-widget.dart';
 import 'package:app/src/profile/profile-widget.dart';
 import "package:flutter/material.dart";
 import "package:bubble_bottom_bar/bubble_bottom_bar.dart";
@@ -14,10 +15,7 @@ class _ClientDashboardWidgetState extends State<ClientDashboardWidget> {
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   static List<Widget> _widgetOptions = <Widget>[
-    Text(
-      'Solicitações',
-      style: optionStyle,
-    ),
+    SolicitationWidget(),
     ProfileWidget()
   ];
 
