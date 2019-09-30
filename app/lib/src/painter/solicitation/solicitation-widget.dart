@@ -1,3 +1,4 @@
+import 'package:app/src/painter/solicitation/ongoing-request/ongoing-request-widget.dart';
 import 'package:app/src/painter/solicitation/pending-request/pending-request-widget.dart';
 import 'package:flutter/material.dart';
 
@@ -20,7 +21,7 @@ class SolicitationWidget extends StatelessWidget {
         RaisedButton(
           child: Text("Em progresso"),
           onPressed: (){
-            
+             Navigator.of(context).push(MaterialPageRoute(builder:(context)=>OngoingRequestWidget()));
           },
         ),
       ],
