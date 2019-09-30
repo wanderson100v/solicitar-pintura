@@ -9,9 +9,9 @@ class RequestQuot extends StatefulWidget {
 
 class _RequestQuotState extends State<RequestQuot> {
   
-  List<PainterObjectObject> paintersObject = [
-    PainterObjectObject("Parede", "Pintar parede com cuidado, tirar o mofo"),
-    PainterObjectObject("Porta", "Lixar e deixar como nova"),
+  List<PainterObject> paintersObject = [
+    PainterObject("Parede", "Pintar parede com cuidado, tirar o mofo"),
+    PainterObject("Porta", "Lixar e deixar como nova"),
   ];
 
   @override
@@ -58,7 +58,7 @@ Widget _buildPainterObjectExpansionPanelListWidget(){
               paintersObject[index].isExpanded = !isExpanded;
             });
           },
-          children: paintersObject.map<ExpansionPanel>((PainterObjectObject painterObject) {
+          children: paintersObject.map<ExpansionPanel>((PainterObject painterObject) {
             return ExpansionPanel(
                 headerBuilder: (BuildContext context, bool isExpanded) {
                   return ListTile(
@@ -114,7 +114,7 @@ Widget _buildPainterObjectExpansionPanelListWidget(){
   
 }
 
-class PainterObjectObject{
+class PainterObject{
   
   String title;
   String description;
@@ -122,6 +122,6 @@ class PainterObjectObject{
   Color color;
   bool isExpanded = false;
 
-  PainterObjectObject(this.title,this.description,{this.image, this.color});
+  PainterObject(this.title,this.description,{this.image, this.color});
 
 }

@@ -1,4 +1,5 @@
 import 'package:app/src/login/login-widget.dart';
+import 'package:app/src/painter/solicitation/solicitation-widget.dart';
 import 'package:app/src/painter/values/values-widget.dart';
 import 'package:app/src/painter/portfolio/portfolio-widget.dart';
 import 'package:app/src/profile/profile-widget.dart';
@@ -15,10 +16,7 @@ class _PainterDashboardWidgetState extends State<PainterDashboardWidget> {
   int _selectedIndex = 0;
   static const TextStyle optionStyle = TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   static List<Widget> _widgetOptions = <Widget>[
-    Text(
-      'Solictações',
-      style: optionStyle,
-    ),
+    SolicitationWidget(),
     PortfolioWidget(),
     Column(children: <Widget>[
       ProfileWidget(),
