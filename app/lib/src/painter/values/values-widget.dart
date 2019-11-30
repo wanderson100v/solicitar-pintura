@@ -1,5 +1,5 @@
-import 'package:app/src/default-widgets/label-description-widget.dart';
-import 'package:app/src/painter/values/edit/edit-values-widget.dart';
+import 'package:app/src/util/widget-factory.dart';
+import 'package:app/src/painter/values/edit-values-widget.dart';
 import 'package:flutter/material.dart';
 
 class ValuesWidget extends StatelessWidget {
@@ -22,8 +22,8 @@ class ValuesWidget extends StatelessWidget {
               )
           ]),)
         ),
-        LabelDescriptionWidget("Diária", "R\$ 80,00"),
-        LabelDescriptionWidget("Metros quadrados", "R\$ 10,00"),
+        buildLabelDescriptionWidget("Diária", "R\$ 80,00"),
+        buildLabelDescriptionWidget("Metros quadrados", "R\$ 10,00"),
       ],
     );
   }

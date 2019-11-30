@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:animated_splash/animated_splash.dart';
-import 'package:app/src/login/login-widget.dart';
+import 'package:app/src/login-widget.dart';
 
 class MyAppWidget extends StatelessWidget {
   @override
@@ -12,7 +12,7 @@ class MyAppWidget extends StatelessWidget {
         type: AnimatedSplashType.StaticDuration,
       );
     return MaterialApp(
-      home:animatedSplash,
+      home: animatedSplash,
       title: "Solicitar pintura",
       theme: ThemeData(
         brightness: Brightness.light,
