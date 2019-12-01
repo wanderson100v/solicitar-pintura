@@ -1,5 +1,5 @@
-
-import 'package:app/src/register/register-form-widget.dart';
+import 'package:app/src/register/client-register-form-widget.dart';
+import 'package:app/src/register/painter-register-form-widget.dart';
 import 'package:app/src/util/functions.dart';
 import 'package:app/src/util/widget-factory.dart';
 import 'package:flutter/material.dart';
@@ -38,7 +38,7 @@ class SelectUserTypeWidget extends StatelessWidget{
                 "dasdda dasdadas dadsa\n"+
                 "dasdda dasdadas dadsa\n";
     var icon = Icons.person_outline;
-    var action = () => pushNavigator(context, RegisterFormWidget("Cadastro Cliente"));
+    var action = () => pushNavigator(context, ClientRegisterFormWidget());
     Widget clientWidget =  _createOptionWidget(title, description, icon, action);
     return clientWidget;    
   }
@@ -49,7 +49,7 @@ class SelectUserTypeWidget extends StatelessWidget{
                 "dasdda dasdadas dadsa\n"+
                 "dasdda dasdadas dadsa\n";
     var icon = Icons.format_paint;
-    var action = () => pushNavigator(context, RegisterFormWidget("Cadastro Pintor")); 
+    var action = () => pushNavigator(context, PainterRegisterFormWidget()); 
     Widget painterWidget =  _createOptionWidget(title, description, icon, action);
     return painterWidget;           
   }

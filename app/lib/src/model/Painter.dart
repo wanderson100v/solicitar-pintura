@@ -1,13 +1,15 @@
-
-import 'dart:ui';
+import 'dart:convert';
+import 'package:app/src/model/Customer.dart';
+import 'package:app/src/model/Entity.dart';
+import 'package:app/src/model/Msg.dart';
 import 'package:app/src/model/Service.dart';
+import 'package:http/http.dart';
 
-class Painter {
-  String name;
-  Image image;
+class Painter extends Customer  {
   double dayliValue;
   double squareMeterValue;
   String description;
+  
   List<Service> services = [
     Service(
         headerValue: "Serviço tal",
@@ -17,45 +19,46 @@ class Painter {
         expandedValue: "Serviço realizado com tais procedimentos2"),
   ];
 
-  Painter(
-      {this.name,
-      this.image,
-      this.description,
-      this.dayliValue,
-      this.squareMeterValue});
-
   static List<Painter> getAll(){
-    return [
-          Painter(
-              name: "Jubileu",
-              description: "O melhor pintor da cidade",
-              dayliValue: 80,
-              squareMeterValue: 20),
-          Painter(
-              name: "Severino",
-              description: "Barato e rápido",
-              dayliValue: 90,
-              squareMeterValue: 40),
-          Painter(
-              name: "Frederico",
-              description: "Seu serviço em dois palito",
-              dayliValue: 70,
-              squareMeterValue: 15),
-          Painter(
-              name: "Jubileu",
-              description: "O melhor pintor da cidade",
-              dayliValue: 80,
-              squareMeterValue: 20),
-          Painter(
-              name: "Severino",
-              description: "Barato e rápido",
-              dayliValue: 90,
-              squareMeterValue: 40),
-          Painter(
-              name: "Frederico",
-              description: "Seu serviço em dois palito",
-              dayliValue: 70,
-              squareMeterValue: 15),
-        ];
+    return [];
+  }
+
+  Future<Msg> create(String password, String confirmPassowd) async {
+    Response res = await post(Entity.server+"solicitar-pintura/server/index.php/register/painter"
+      ,body: {
+        "description": this.description,
+        "name" :this.name,
+        "login" :this.login,
+        "password": password,
+        "confirm_password": confirmPassowd,
+        "email": this.email,
+        "tel_number": this.telNumber
+      }
+    );
+    
+    if (res.statusCode == 200) {
+      Msg msg = Msg.fromJSON(jsonDecode(res.body));
+      return msg;
+    } else {
+      print(res.body);
+      return Msg.error(res.body);
+    }
+  }
+
+  Painter();
+
+  Painter.fromJSON(Map<String, dynamic>painterJson){   
+    this.id = int.parse(painterJson["id"]);
+    this.active = (int.parse(painterJson["client"]["active"]) == 1);
+    this.type = painterJson["client"]["type"];
+    this.name = painterJson["client"]["name"];
+    this.email = painterJson["client"]["email"];
+    this.telNumber = painterJson["client"]["tel_number"];
+    this.login = painterJson["client"]["login"];
+    if(painterJson["square_meter_value"]!= null)
+      this.squareMeterValue = double.parse(painterJson["square_meter_value"]);
+    if(painterJson["dayli_value"]!= null)
+      this.dayliValue =double.parse(painterJson["dayli_value"]);
+    this.description = painterJson["description"];
   }
 }

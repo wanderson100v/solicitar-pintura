@@ -18,30 +18,26 @@ class Address_model extends CI_Model{
             $this->id = $this->db->insert_id();
             return "Sucesso";
         }
-        else
-        {
-            return "Ocorreu um erro ao cadastrar contato" ;
-        }
+        else return avaliable_error_cod($this->db->error()['code'], "cadastrar endereço");
     }
 
-    public function read($id)
+    public function read_id($id)
     {
         $this->db->where('id', $id);
-		return $this->db->get('address');
+		return $this->db->get('address')->row_array();
 	}
 
     public function update($id, $address)
     {   
         if($this->db->update('address',$address, array('id' => $id)))
             return "Sucesso";
-        else
-            return "Ocorreu um erro ao editar contato";
+        else return avaliable_error_cod($this->db->error()['code'], "editar endereço");
     }
 
     public function delete($id)
     {
         return ($this->db->delete('address', array('id' => $id)))? 
             "Sucesso":
-            "Erro ao excluir contato";
+            avaliable_error_cod($this->db->error()['code'], "excluir endereço");;
 	}
 }

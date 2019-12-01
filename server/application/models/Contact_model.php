@@ -21,15 +21,8 @@ class Contact_model extends CI_Model{
         $this->type = $type;
         $this->description = $description;
         $this->fk_client_id = $fk_client_id;
-        if($this->db->insert('contact', $this))
-        {
-            $this->id = $this->db->insert_id();
-            return "Sucesso";
-        }
-        else
-        {
-            return "Ocorreu um erro ao cadastrar contact" ;
-        }
+        if($this->db->insert('contact', $this)) return "Sucesso";
+        else return avaliable_error_cod($this->db->error()['code'], "cadastrar contato");
     }
 
     public function read($id)
@@ -40,10 +33,8 @@ class Contact_model extends CI_Model{
 
     public function update($id, $contact)
     {
-        if($this->db->update('contact',$contact, array('id' => $id)))
-            return "Sucesso";
-        else
-            return "Ocorreu um erro ao editar contact";
+        if($this->db->update('contact',$contact, array('id' => $id))) return "Sucesso";
+        else return avaliable_error_cod($this->db->error()['code'],"editar contato");
     }
 
     public function delete($id)

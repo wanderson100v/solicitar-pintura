@@ -27,10 +27,7 @@ class Portfolio_model extends CI_Model{
             $this->id = $this->db->insert_id();
             return "Sucesso";
         }
-        else
-        {
-            return "Ocorreu um erro ao cadastrar portifólio de pintor" ;
-        }
+        else return avaliable_error_cod($this->db->error()['code'], "cadastrar portifólio de pintor");
     }
 
     public function read_id($id)
@@ -43,14 +40,13 @@ class Portfolio_model extends CI_Model{
     {
         if($this->db->update('portfolio',$portfolio, array('id' => $id)))
             return "Sucesso";
-        else
-            return "Ocorreu um erro ao editar portifólio de pintor";
+        else return avaliable_error_cod($this->db->error()['code'], "editar portifólio de pintor");
     }
 
     public function delete($id)
     {
         return ($this->db->delete('portfolio', array('id' => $id)))? 
             "Sucesso":
-            "Erro ao excluir portifólio de pintor";
+            avaliable_error_cod($this->db->error()['code'], "excluir portifólio de pintor");
 	}
 }

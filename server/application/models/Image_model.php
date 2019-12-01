@@ -24,10 +24,7 @@ class image_model extends CI_Model{
             $this->id = $this->db->insert_id();
             return "Sucesso";
         }
-        else
-        {
-            return "Ocorreu um erro ao cadastrar imagem de portifólio" ;
-        }
+        else return avaliable_error_cod($this->db->error()['code'], "cadastrar imagem de portifólio");
     }
 
     public function read($id)
@@ -40,14 +37,13 @@ class image_model extends CI_Model{
     {
         if($this->db->update('image',$image, array('id' => $id)))
             return "Sucesso";
-        else
-            return "Ocorreu um erro ao editar imagem de portifólio";
+        else return avaliable_error_cod($this->db->error()['code'], "editar imagem de portifólio");
     }
 
     public function delete($id)
     {
         return ($this->db->delete('image', array('id' => $id)))? 
             "Sucesso":
-            "Erro ao excluir imagem de portifólio";
+            avaliable_error_cod($this->db->error()['code'], "exluir imagem de portifólio");
 	}
 }

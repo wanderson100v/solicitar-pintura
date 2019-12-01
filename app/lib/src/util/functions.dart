@@ -14,3 +14,7 @@ void pushReplacementNavigator(context, page){
     MaterialPageRoute(builder :(context) => page)
   );
 }
+
+void showMsg(context, msg){
+  Scaffold.of(context).showSnackBar(SnackBar(content: Text(msg)));
+}

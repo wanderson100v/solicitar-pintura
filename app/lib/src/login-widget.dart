@@ -1,4 +1,8 @@
 import 'package:app/src/client/dashboeard-widget.dart';
+import 'package:app/src/model/Customer.dart';
+import 'package:app/src/model/Msg.dart';
+import 'package:app/src/model/Painter.dart';
+import 'package:app/src/model/User.dart';
 import 'package:app/src/painter/dashboeard-widget.dart';
 import 'package:app/src/register/select-user-type-widget.dart';
 import 'package:app/src/util/functions.dart';
@@ -28,6 +32,7 @@ class _LoginFormState extends State<LoginForm> {
   
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _loginFieldController = TextEditingController();
+  final TextEditingController _passwordFieldController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +57,7 @@ class _LoginFormState extends State<LoginForm> {
   }
 
   Widget _buildPasswordWidget(){
-    return buildTextFieldContainer("Senha", obscureText :true, validation:  "Senha não informada");
+    return buildTextFieldContainer("Senha", obscureText :true, validation:  "Senha não informada", controller: _passwordFieldController);
   }
 
   Widget _buildButtonBarWidget(context){
@@ -70,18 +75,24 @@ class _LoginFormState extends State<LoginForm> {
      return buttonBar;
   }
 
-  void _logar(context){
+  _logar(context){
     if(_formKey.currentState.validate()){
-      Widget dashBoard;
-      if(_loginFieldController.text =="p")
-        dashBoard = PainterDashboardWidget();
-      else if(_loginFieldController.text =="c")
-        dashBoard = ClientDashboardWidget();
-      if(dashBoard != null)
-        pushReplacementNavigator(context, dashBoard);
-      else
-        Scaffold.of(context)
-            .showSnackBar(SnackBar(content: Text('Usuário inválido')));
+        User.singin(_loginFieldController.text,  _passwordFieldController.text)
+        .timeout(const Duration(seconds: 5), onTimeout: ()async=> showMsg(context, "O servidor demorou de mais a reposder"))
+        .then((response){
+          if(response is Painter)
+            pushReplacementNavigator(context, PainterDashboardWidget());
+          else if(response is Customer)
+            pushReplacementNavigator(context, ClientDashboardWidget());
+          else if(response is Msg)
+            showMsg(context, "Usuário inválido");
+          else
+            print("Sou ningém");
+        })
+        .catchError((erro){
+          print(erro);
+          showMsg(context, "Erro ao logar");
+        });
     }
   }
 }

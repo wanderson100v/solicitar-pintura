@@ -4,6 +4,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Painter_model extends CI_Model{
     
     public $id;
+    public $description;
     public $dayli_value;
     public $square_meter_value;
     public $fk_client_id;
@@ -16,26 +17,17 @@ class Painter_model extends CI_Model{
 		return $this->db->get()->row_array();
 	}
 
-    public function create($name, $login, $password, $dayli_value, $square_meter_value)
+    public function create($description, $fk_client_id)
     {
-        $this->load->model('client_model');
-        $msg = $this->fk_client_id = $this->client_model->create($name, $login, $password, "pintor");
-        if($msg != "Sucesso"){
-            return $msg;
-        }
-        $this->dayli_value = $dayli_value;
-        $this->square_meter_value = $square_meter_value;
-        $this->fk_client_id = $this->client_model->id;
+        $this->fk_client_id = $fk_client_id;
+        $this->description = $description;
         
         if($this->db->insert('painter', $this))
         {
             $this->id = $this->db->insert_id();
             return "Sucesso";
         }
-        else
-        {
-            return "Ocorreu um erro ao cadastrar painter" ;
-        }
+        else return avaliable_error_cod($this->db->error()['code'], "cadastrar pintor");
         
     }
 
@@ -46,17 +38,17 @@ class Painter_model extends CI_Model{
 		return $this->db->get()->row_array();
 	}
 
-    public function update($id, $dayli_value, $square_meter_value)
+    public function update($id, $description ,$dayli_value, $square_meter_value)
     {
         if( $this->db->update('painter', 
             array(
+                'description' => $description,
                 'dayli_value' => $dayli_value,
                 'square_meter_value' => $square_meter_value,
             ), 
             array('id' => $id)))
             return "Sucesso";
-        else
-            return "Ocorreu um erro ao editar pintor";
+        else return avaliable_error_cod($this->db->error()['code'], "editar pintor");
     }
     
 }

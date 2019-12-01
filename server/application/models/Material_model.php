@@ -26,10 +26,8 @@ class Material_model extends CI_Model{
             $this->id = $this->db->insert_id();
             return "Sucesso";
         }
-        else
-        {
-            return "Ocorreu um erro ao cadastrar material para serviço" ;
-        }
+        else return avaliable_error_cod($this->db->error()['code'], "cadastrar material para serviço");
+        
     }
 
     public function read_id($id)
@@ -42,14 +40,13 @@ class Material_model extends CI_Model{
     {
         if($this->db->update('material',$material, array('id' => $id)))
             return "Sucesso";
-        else
-            return "Ocorreu um erro ao editar material de serviço";
+        else return avaliable_error_cod($this->db->error()['code'], "editar material para serviço");
     }
 
     public function delete($id)
     {
         return ($this->db->delete('material', array('id' => $id)))? 
             "Sucesso":
-            "Erro ao excluir material de serviço";
+            avaliable_error_cod($this->db->error()['code'], "excluir material para serviço");
 	}
 }

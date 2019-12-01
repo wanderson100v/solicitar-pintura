@@ -40,10 +40,7 @@ class request_model extends CI_Model{
             $this->id = $this->db->insert_id();
             return "Sucesso";
         }
-        else
-        {
-            return "Ocorreu um erro ao cadastrar requisição de serviço" ;
-        }
+        else return avaliable_error_cod($this->db->error()['code'], "cadastrar requisição de serviço");
     }
 
     public function read_id($id)
@@ -56,14 +53,13 @@ class request_model extends CI_Model{
     {
         if($this->db->update('request',$request, array('id' => $id)))
             return "Sucesso";
-        else
-            return "Ocorreu um erro ao editar requisição de serviço";
+        else return avaliable_error_cod($this->db->error()['code'], "editar requisição de serviço");
     }
 
     public function delete($id)
     {
         return ($this->db->delete('request', array('id' => $id)))? 
             "Sucesso":
-            "Erro ao excluir requisição de serviço";
+            avaliable_error_cod($this->db->error()['code'], "excluir requisição de serviço");
 	}
 }

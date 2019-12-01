@@ -20,7 +20,7 @@ class _PainterDetailsWidgetState extends State<PainterDetailsWidget> {
     return buildScaffold("Detalhes Pintor",
       Column(
           children: <Widget>[
-            Text(widget.painter.name, style : TextStyle(fontSize: 28)),
+            Text(/*widget.painter.name*/ "zé", style : TextStyle(fontSize: 28)),
             Padding(
               padding: EdgeInsets.only(top: 10, bottom: 5),
               child: Text("Valores cobrados", style: TextStyle(fontSize: 18),),
