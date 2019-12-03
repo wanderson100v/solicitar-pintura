@@ -14,6 +14,15 @@ class request_model extends CI_Model{
 
     public function read_fk_client_id($id)
     {
+        $situations = array(
+            "novo", 
+            "solicitacao-aceita",
+            "orcamento-aceito",
+            "em-progresso",
+            "finalizado",
+            "solicitacao-rejeitada",
+            "cancelado-pintor"
+        );
         $this->db->select("request.*,  client.name, address.zip_code,
             address.zip_code,  address.street,  address.neighborhood,
             address.city,  address.state, address.country");
@@ -22,17 +31,21 @@ class request_model extends CI_Model{
         $this->db->join("painter", "painter.id = request.fk_painter_id");
         $this->db->join("client", "client.id = painter.fk_client_id");
         $this->db->where('request.fk_client_id', $id);
-        $this->db->or_where("situation", "novo");
-        $this->db->or_where("situation", "solicitacao-aceita");
-        $this->db->or_where("situation", "orcamento-aceito");
-        $this->db->or_where("situation", "em-progresso");
-        $this->db->or_where("situation", "solicitacao-rejeitada");
-        $this->db->or_where("situation", "cancelado-pintor");
+        $this->db->where_in("request.situation", $situations);
 		return $this->db->get()->result_array();
     }
     
     public function read_fk_painter_id($id)
     {
+        $situations = array(
+            "novo", 
+            "solicitacao-aceita",
+            "orcamento-aceito",
+            "em-progresso",
+            "finalizado",
+            "orcamento-rejeitado",
+            "cancelado-cliente"
+        );
         $this->db->select("request.*,  client.name,  address.zip_code,
             address.zip_code,  address.street,  address.neighborhood,
             address.city,  address.state, address.country");
@@ -40,12 +53,7 @@ class request_model extends CI_Model{
         $this->db->join("address", "address.id = request.fk_address_id");
         $this->db->join("client", "client.id = request.fk_client_id");
         $this->db->where('request.fk_painter_id', $id);
-        $this->db->or_where("situation", "novo");
-        $this->db->or_where("situation", "solicitacao-aceita");
-        $this->db->or_where("situation", "orcamento-aceito");
-        $this->db->or_where("situation", "em-progresso");
-        $this->db->or_where("situation", "orcamento-rejeitado");
-        $this->db->or_where("situation", "cancelado-cliente");
+        $this->db->where_in("request.situation", $situations);
 		return $this->db->get()->result_array();
     }
 

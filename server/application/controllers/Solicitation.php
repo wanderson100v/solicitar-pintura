@@ -50,4 +50,25 @@ class Solicitation extends CI_Controller {
     }
 
 
+    public function update()
+    {	            
+        $id = $this->input->post('id');
+        $situation = $this->input->post('situation');
+        $start_date = $this->input->post('start_date');
+        $end_date = $this->input->post('end_date');
+        $amount = $this->input->post('amount');        
+
+        $this->load->model("request_model");
+        $msg  = $this->request_model->update($id, 
+            array(
+                "situation" => $situation,
+                "start_date" => $start_date,
+                "end_date" => $end_date,
+                "amount"=> $amount
+            )
+        );
+        avaliable_msgs(array($msg), "Sucesso ao atualizar requisição");
+    }
+
+
 }

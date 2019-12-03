@@ -27,7 +27,7 @@ class ProfileWidget extends StatelessWidget {
   }
 
   Widget _buildProfileEdit(context){
-    return  _buildEdit(context, "Nome de usuário", EditProfileWidget() ,fontSize : 20);
+    return  _buildEdit(context, Customer.customerOn.name, EditProfileWidget() ,fontSize : 20);
   }
 
   Widget _buildAnddressEdit(context){

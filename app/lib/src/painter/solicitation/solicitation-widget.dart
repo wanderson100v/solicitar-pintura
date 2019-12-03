@@ -27,6 +27,10 @@ class SolicitationWidget extends StatefulWidget {
         "title" : "Solicitação em progresso",
         "description" : "Esta solicitação está no momento sendo realizada"
       },
+      "finalizado": { 
+        "title" : "Serviço finalizado",
+        "description" : "Esta solicitação foi finalizada e esta aguardando confirmação do cliente"
+      },
       "orcamento-rejeitado": { 
         "title" : "Orçamento rejeitado",
         "description" : "O cliente não aceitou o valor definido para a realização serviço"
@@ -44,28 +48,38 @@ class SolicitationWidget extends StatefulWidget {
 class _SolicitationWidgetState extends State<SolicitationWidget> {
   final  _formKey = GlobalKey<FormState>();
 
+  final TextEditingController _amountFieldController = new TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
         Padding(
            padding: EdgeInsets.symmetric(vertical: 10),
-          child:  Text("Suas solicitações", style: TextStyle(fontSize: 18)),
+          child:  Row(children:[ 
+            Text("Suas solicitações", style: TextStyle(fontSize: 18)),
+            IconButton(
+              icon: Icon(Icons.refresh),
+              onPressed:() =>_attRequests()
+            ) ,
+          ])
         ),
         _buildRequestExpansionPanelListWidget(context)
       ],
     );
   }
 
-Widget _buildRequestExpansionPanelListWidget(context) {
+  _attRequests(){
     Request.readPainterId(Painter.painterOn.id)
     .then((resquestsQuery){
-      if(resquestsQuery != null && (SolicitationWidget._requests == null || SolicitationWidget._requests.length != resquestsQuery.length )){
-        setState((){
-          SolicitationWidget._requests = resquestsQuery;
-        });
-      }
+      setState((){
+        SolicitationWidget._requests = resquestsQuery;
+      });
     });
+  }
+
+  Widget _buildRequestExpansionPanelListWidget(context) {
+    
     if(SolicitationWidget._requests == null || SolicitationWidget._requests.isEmpty)
       return Center(child: Text("Nenhuma solicitação para mostrar"));
     else{
@@ -80,7 +94,7 @@ Widget _buildRequestExpansionPanelListWidget(context) {
     return ExpansionPanel(
       headerBuilder: (BuildContext context, bool isExpanded) {
         return ListTile(
-          leading: Icon(Icons.send),
+          leading: Icon(Icons.work),
           title: Text(request.customer.name),
           subtitle: Text(SolicitationWidget._situation[request.situation]["title"])
         );
@@ -90,8 +104,6 @@ Widget _buildRequestExpansionPanelListWidget(context) {
         child:Column(
           children: <Widget>[
             Text(SolicitationWidget._situation[request.situation]["description"]),
-            buildLabelDescriptionWidget("Inicio", request.startDate.toString()),
-            buildLabelDescriptionWidget("Fim", request.startDate.toString()),
             ButtonBar(
               children: <Widget>[
                 IconButton(
@@ -102,7 +114,7 @@ Widget _buildRequestExpansionPanelListWidget(context) {
                         request,
                         SolicitationWidget._situation[request.situation]["title"],
                         SolicitationWidget._situation[request.situation]["description"],
-                        _buildAction(request.situation, context)
+                        _buildAction(request, context)
                       )
                     )
                 ),
@@ -114,38 +126,45 @@ Widget _buildRequestExpansionPanelListWidget(context) {
     );
   }
 
-  Widget _buildAction(String situation, context){
+  Widget _buildAction(Request request, context){
+    String situation = request.situation;
     if(situation == "novo")
-      return _buildNewAction(context);
+      return _buildNewAction(context, request);
     else if(situation == "solicitacao-aceita")
-      return _buildRequestAcceptedAction();
+      return _buildRequestAcceptedAction(request);
     else if(situation == "orcamento-aceito")
-      return _buildAcceptedBudgetAction();
+      return _buildAcceptedBudgetAction(request);
     else if(situation == "em-progresso")
-      return _buildInProgressAction();
+      return _buildInProgressAction(request);
+    else if(situation == "finalizado")
+      return _buildFinishAction(request);
     else if(situation == "orcamento-rejeitado")
-      return _buildBudgetRejectedAction();
+      return _buildBudgetRejectedAction(request);
     else if(situation == "cancelado-cliente")
-      return _buildCustomerCanceledAction();
+      return _buildCustomerCanceledAction(request);
     else 
       return Container();
 
   }
 
-  Form _buildNewAction(context){
+  Form _buildNewAction(context, Request request){
     return Form(
       key: _formKey,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: <Widget>[
-          buildTextFieldContainer("Valor", validation: "Valor não informado"),
+          buildTextFieldContainer("Valor", validation: "Valor não informado", controller: _amountFieldController),
           Row(
             children :<Widget>[
             Padding(
               padding: const EdgeInsets.all(5),
               child: RaisedButton(
                 onPressed: () {
-                    Navigator.of(context).pop();
+                    request.situation = "solicitacao-rejeitada";
+                    request.update().then((response){
+                      _attRequests();
+                      showAlert(context, "Alerta", "mensagem enviada para usuário informando sua rejeição de requisição");
+                    });
                 },
                 child: Text('Regeitar'),
               ),
@@ -155,7 +174,11 @@ Widget _buildRequestExpansionPanelListWidget(context) {
               child: RaisedButton(
                 onPressed: () {
                   if (_formKey.currentState.validate()) {
-                    //Navigator.push(context, MaterialPageRoute(builder :(context) => ()));
+                    request.amount = double.parse(_amountFieldController.text);
+                    request.situation = "solicitacao-aceita";
+                    request.update().then((response){
+                      showAlert(context, "Alerta", "mensagem enviada para usuário informando sua aceitação de requisição");
+                    });
                   }else{
                     Scaffold.of(context)
                         .showSnackBar(SnackBar(content: Text('Um ou mais campos inválidos')));
@@ -170,23 +193,27 @@ Widget _buildRequestExpansionPanelListWidget(context) {
     );
   }
 
-  ButtonBar _buildRequestAcceptedAction(){
+  ButtonBar _buildRequestAcceptedAction(Request request){
     ButtonBar actionsBar = new ButtonBar(
       children: <Widget>[
-        _buildCancelIconButton()
+        _buildCancelIconButton(request)
       ],
     );
     return actionsBar;
   }
 
-  ButtonBar _buildAcceptedBudgetAction(){
+  ButtonBar _buildAcceptedBudgetAction(Request request){
     ButtonBar actionsBar = new ButtonBar(
       children: <Widget>[
-        _buildCancelIconButton(),
+        _buildCancelIconButton(request),
         RaisedButton(
           child: Text("iniciar serviço"),
           onPressed: (){
-
+             request.situation = "em-progresso";
+              request.update().then((response){
+                _attRequests();
+                showAlert(context, "Alerta", "mensagem enviada para usuário informando o ínicio da realização do serviço");
+              });
           },
         )
       ],
@@ -194,28 +221,41 @@ Widget _buildRequestExpansionPanelListWidget(context) {
     return actionsBar;
   } 
 
-  ButtonBar _buildInProgressAction(){
+  ButtonBar _buildInProgressAction(Request request){
     ButtonBar actionsBar = new ButtonBar(
       children: <Widget>[
-        _buildCancelIconButton(),
+        _buildCancelIconButton(request),
         RaisedButton(
           child: Text("Finalizar serviço"),
           onPressed: (){
-
+             request.situation = "finalizado";
+              request.update().then((response){
+                _attRequests();
+                showAlert(context, "Alerta", "mensagem enviada para o cliente informando a finalização do serviço");
+              });
           },
         )
       ],
     );
     return actionsBar;
   } 
+  
+  Container _buildFinishAction(Request request){
+    return Container();
+  }
 
-  ButtonBar _buildBudgetRejectedAction(){
+
+  ButtonBar _buildBudgetRejectedAction(Request request){
     ButtonBar actionsBar = new ButtonBar(
       children: <Widget>[
         RaisedButton(
           child: Text("Confirmar"),
           onPressed: (){
-
+             request.situation = "historico";
+              request.update().then((response){
+                _attRequests();
+                showAlert(context, "Alerta", "Requisição arquivada");
+              });
           },
         )
       ],
@@ -223,24 +263,20 @@ Widget _buildRequestExpansionPanelListWidget(context) {
     return actionsBar;
   }
 
-  ButtonBar _buildCustomerCanceledAction(){
-    ButtonBar actionsBar = new ButtonBar(
-      children: <Widget>[
-        RaisedButton(
-          child: Text("Confirmar"),
-          onPressed: (){
-
-          },
-        )
-      ],
-    );
-    return actionsBar;
+  ButtonBar _buildCustomerCanceledAction(Request request){
+    return _buildBudgetRejectedAction(request);
   } 
 
-  RaisedButton _buildCancelIconButton(){
+  RaisedButton _buildCancelIconButton(Request request){
     return RaisedButton(
       child: Text("cancelar"),
-      onPressed: (){},
+      onPressed: (){
+        request.situation = "cancelado-pintor";
+          request.update().then((response){
+            _attRequests();
+            showAlert(context, "Alerta", "Uma mensagem informando o cancelamento da requisição foi enviada ao cliente");
+          });
+      },
     );
   }
 }

@@ -64,6 +64,26 @@ class Request extends Entity{
     }
   }
 
+  Future<Msg> update() async {
+    Response res = await post(Entity.server+"solicitar-pintura/server/index.php/solicitation/update"
+      ,body: {
+        "id": this.id.toString(),
+        "start_date": this.startDate.toString(),
+        "end_date": this.endDate.toString(),
+        "amount": this.amount.toString(),
+        "situation": this.situation
+      }
+    );
+    if (res.statusCode == 200) {
+      print(res.body);
+      Msg msg = Msg.fromJSON(jsonDecode(res.body));
+      return msg;
+    } else {
+      print(res.body);
+      return Msg.error(res.body);
+    }
+  }
+
   static Future<List<Request>> readPainterId(int id) async {
     Response res = await get(
       Entity.server+"solicitar-pintura/server/index.php/solicitation/read/painter?id="+id.toString()
@@ -92,6 +112,4 @@ class Request extends Entity{
     }else
       return null;
   }
-
-
 }
