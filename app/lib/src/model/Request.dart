@@ -1,40 +1,97 @@
-import 'PainterObject.dart';
+import 'dart:convert';
 
-class Request{
-  String clienteName;
-  String dataInicio;
-  String dataFim;
-  String state;
-  double value = 100;
-  
-  List<PainterObject> paintersObject = [
-    PainterObject("Parede", "Pintar parede com cuidado, tirar o mofo"),
-    PainterObject("Porta", "Lixar e deixar como nova"),
-  ];
+import 'package:app/src/model/Address.dart';
+import 'package:app/src/model/Customer.dart';
+import 'package:app/src/model/Entity.dart';
+import 'package:app/src/model/Msg.dart';
+import 'package:app/src/model/Painter.dart';
+import 'package:app/src/model/PainterObject.dart';
+import 'package:http/http.dart';
 
-  Request(this.clienteName, this.dataInicio, this.dataFim, this.state);
+class Request extends Entity{
+  String situation;
+  DateTime startDate;
+  DateTime endDate;
+  double amount;
+  Address address;
+  Customer customer;
+  Painter painter;
+  List<PainterObject> painterObjects;
 
+  Request();
 
-  static List<Request> getAllP(){
-  	return [
-    	Request("Jubileu", "13/23/12", "13/23/12", "novo"),
-      Request("frascis", "13/23/12", "13/23/12", "solicitacao-aceita"),
-      Request("Maria", "13/23/12", "13/23/12", "orcamento-aceito"),
-      Request("Dorinha", "13/23/12", "13/23/12", "em-progresso"),
-      Request("Jaman", "13/23/12", "13/23/12", "orcamento-rejeitado"),
-      Request("Airi", "13/23/12", "13/23/12", "cancelado-cliente"),
-  	];
+  Request.fromJSON(Map<String, dynamic> requestJson){   
+    this.id = int.parse(requestJson["id"]);
+    this.startDate = (requestJson["start_date"] != null)? DateTime.parse(requestJson["start_date"]) : null;
+    this.endDate = (requestJson["end_date"] != null) ? DateTime.parse(requestJson["end_date"]) : null;
+    this.situation = requestJson["situation"];
+    this.amount = (requestJson["amount"] != null) ? double.parse(requestJson["amount"]) : null;
+    this.address =  Address.fromJSONRequest(requestJson);
+    this.customer = Customer.fromJSONRequest(requestJson);
+    this.painter =  Painter.fromJSONRequest(requestJson);
   }
 
-  static List<Request> getAllC(){
-  	return [
-    	Request("Jubileu", "13/23/12", "13/23/12", "novo"),
-      Request("frascis", "13/23/12", "13/23/12", "solicitacao-aceita"),
-      Request("Maria", "13/23/12", "13/23/12", "orcamento-aceito"),
-      Request("Dorinha", "13/23/12", "13/23/12", "em-progresso"),
-      Request("Jaman", "13/23/12", "13/23/12", "solicitacao-rejeitada"),
-      Request("Airi", "13/23/12", "13/23/12", "cancelado-pintor"),
-  	];
+  Future<Msg> create() async {
+    Response res = await post(Entity.server+"solicitar-pintura/server/index.php/solicitation/create"
+      ,body: {
+        "start_date": this.startDate.toString(),
+        "address" : jsonEncode(
+              {
+                "zip_code": this.address.zipCode,
+                "street": this.address.street,
+                "neighborhood": this.address.neighborhood,
+                "city": this.address.city,
+                "state": this.address.state,
+                "country": this.address.country
+              }
+            ),
+        "painters_objects" : jsonEncode(this.painterObjects.map((p)=>{
+          "title": p.title,
+          "description": p.description,
+          "square_meter" : p.squareMeter.toString()
+        }).toList()),
+        "fk_client_id" :this.customer.id.toString(),
+        "fk_painter_id": this.painter.id.toString()
+      }
+    );
+    if (res.statusCode == 200) {
+      print(res.body);
+      Msg msg = Msg.fromJSON(jsonDecode(res.body));
+      return msg;
+    } else {
+      print(res.body);
+      return Msg.error(res.body);
+    }
   }
-  
+
+  static Future<List<Request>> readPainterId(int id) async {
+    Response res = await get(
+      Entity.server+"solicitar-pintura/server/index.php/solicitation/read/painter?id="+id.toString()
+    );
+    if (res.statusCode == 200) {
+      Map<String,dynamic> resJson = jsonDecode(res.body);
+      List<dynamic> requests = resJson["requests"];
+      print(requests);
+      if(requests!= null && requests.isNotEmpty)
+        return requests.map<Request>((dynamic requestJson) => Request.fromJSON(requestJson)).toList();
+      return null;
+    }else
+      return null;
+  }
+
+  static Future<List<Request>> readClientId(int id) async {
+    Response res = await get(
+      Entity.server+"solicitar-pintura/server/index.php/solicitation/read/client?id="+id.toString()
+    );
+    if (res.statusCode == 200) {
+      Map<String,dynamic> resJson = jsonDecode(res.body);
+      print(resJson["requests"]);
+      if(resJson["requests"] != null)
+        return resJson["requests"].map<Request>((dynamic requestJson) => Request.fromJSON(requestJson)).toList();
+      return null;
+    }else
+      return null;
+  }
+
+
 }

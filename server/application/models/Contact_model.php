@@ -8,12 +8,13 @@ class Contact_model extends CI_Model{
     public $description;
     public $fk_client_id;
 
-    public function read_fk_client_id($id)
+    public function read_fk_client_id_type($id,$type)
     {
-        $this->db->select("*");
+        $this->db->select("description");
         $this->db->from("contact");
         $this->db->where('contact.fk_client_id', $id);
-		return $this->db->get()->result_array();
+        $this->db->where('contact.type', $type);
+		return ($this->db->get()->row_array())["description"];
 	}
     
     public function create($type, $description, $fk_client_id)
@@ -25,10 +26,10 @@ class Contact_model extends CI_Model{
         else return avaliable_error_cod($this->db->error()['code'], "cadastrar contato");
     }
 
-    public function read($id)
+    public function read_id($id)
     {
         $this->db->where('id', $id);
-		return $this->db->get('contact');
+		return $this->db->get('contact')->row_array();
 	}
 
     public function update($id, $contact)

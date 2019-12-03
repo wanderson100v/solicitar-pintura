@@ -2,7 +2,6 @@ import 'package:app/src/model/Msg.dart';
 import 'package:app/src/model/Painter.dart';
 import 'package:app/src/util/functions.dart';
 import 'package:app/src/util/widget-factory.dart';
-import 'package:app/src/login-widget.dart';
 import 'package:flutter/material.dart';
 
 class PainterRegisterFormWidget extends StatelessWidget {

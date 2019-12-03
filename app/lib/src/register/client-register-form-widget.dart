@@ -2,7 +2,6 @@ import 'package:app/src/model/Customer.dart';
 import 'package:app/src/model/Msg.dart';
 import 'package:app/src/util/functions.dart';
 import 'package:app/src/util/widget-factory.dart';
-import 'package:app/src/login-widget.dart';
 import 'package:flutter/material.dart';
 
 class ClientRegisterFormWidget extends StatelessWidget {
@@ -61,7 +60,7 @@ class _MyFormState extends State<MyForm> {
                   client.telNumber = _telFieldController.text;
                   Msg msg = await client.create(_passwordFieldController.text, _confirmPasswordFieldController.text);
                   showMsg(context,msg.msgText);
-                  pushNavigator(context, LoginWidget());
+                  //pushNavigator(context, LoginWidget());
                 }else{
                   showMsg(context,'Um ou mais campos inválidos');
                 }

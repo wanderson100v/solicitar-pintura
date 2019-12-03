@@ -1,13 +1,16 @@
 
+import 'package:app/src/model/Entity.dart';
+import 'package:flutter/material.dart';
 import 'dart:ui';
 
-class PainterObject{
+class PainterObject extends Entity{
   String title;
   String description;
-  Image image;
   Color color;
+  Image image;
+  double squareMeter;
 
-  PainterObject(this.title,this.description,{this.image, this.color});
+  PainterObject(this.title,this.description, {this.squareMeter, this.image, this.color});
 
   static List<PainterObject> getAll(){
     return  [

@@ -1,3 +1,4 @@
+import 'package:app/src/model/Painter.dart';
 import 'package:app/src/util/widget-factory.dart';
 import 'package:app/src/painter/values/edit-values-widget.dart';
 import 'package:flutter/material.dart';
@@ -22,8 +23,8 @@ class ValuesWidget extends StatelessWidget {
               )
           ]),)
         ),
-        buildLabelDescriptionWidget("Diária", "R\$ 80,00"),
-        buildLabelDescriptionWidget("Metros quadrados", "R\$ 10,00"),
+        buildLabelDescriptionWidget("Diária", "R\$ "+ Painter.painterOn.dayliValue.toString()),
+        buildLabelDescriptionWidget("Metros quadrados", "R\$ "+Painter.painterOn.dayliValue.toString()),
       ],
     );
   }

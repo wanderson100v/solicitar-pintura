@@ -1,3 +1,4 @@
+import 'package:app/src/model/Customer.dart';
 import 'package:app/src/model/Request.dart';
 import 'package:app/src/util/Expansion-panel-list-adapter.dart';
 import 'package:app/src/util/Request-details-widget.dart';
@@ -5,7 +6,9 @@ import 'package:app/src/util/functions.dart';
 import 'package:app/src/util/widget-factory.dart';
 import 'package:flutter/material.dart';
 
-class SolicitationWidget extends StatelessWidget {
+class SolicitationWidget extends StatefulWidget {
+
+  static List<Request> _requests;
 
   static Map<String, Map<String, dynamic>> _state = {    
     "novo": {
@@ -35,11 +38,16 @@ class SolicitationWidget extends StatelessWidget {
   };
 
   @override
+  _SolicitationWidgetState createState() => _SolicitationWidgetState();
+}
+
+class _SolicitationWidgetState extends State<SolicitationWidget> {
+  @override
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
         Padding(
-          padding: EdgeInsets.only(top: 10),
+          padding: EdgeInsets.symmetric(vertical: 10),
           child:  Text("Suas solicitações", style: TextStyle(fontSize: 18)),
         ),
         _buildRequestExpansionPanelListWidget(context)
@@ -47,12 +55,23 @@ class SolicitationWidget extends StatelessWidget {
     );
   }
 
-ExpansionPanelListAdapter _buildRequestExpansionPanelListWidget(context){
-    List<ExpansionPanel> requestExpanstionPanels = Request.getAllC()
-      .map<ExpansionPanel>(
-        (Request request) => _buildRequestExpansionPanelWidget(request, context)
-      ).toList();
-    return ExpansionPanelListAdapter(requestExpanstionPanels);
+Widget _buildRequestExpansionPanelListWidget(context){
+    Request.readPainterId(Customer.customerOn.id)
+    .then((resquestsQuery){
+      if(resquestsQuery != null && (SolicitationWidget._requests == null || SolicitationWidget._requests.length != resquestsQuery.length )){
+        setState((){
+          SolicitationWidget._requests = resquestsQuery;
+        });
+      }
+    });
+    if(SolicitationWidget._requests == null || SolicitationWidget._requests.isEmpty)
+      return Center(child: Text("Nenhuma solicitação para mostrar"));
+    else{
+      List<ExpansionPanel> requestsEp = SolicitationWidget._requests
+        .map<ExpansionPanel>((Request request) => _buildRequestExpansionPanelWidget(request, context))
+        .toList();
+      return ExpansionPanelListAdapter(requestsEp);
+    }
   }
 
   ExpansionPanel _buildRequestExpansionPanelWidget(Request request, context){
@@ -60,17 +79,17 @@ ExpansionPanelListAdapter _buildRequestExpansionPanelListWidget(context){
       headerBuilder: (BuildContext context, bool isExpanded) {
         return ListTile(
           leading: Icon(Icons.send),
-          title: Text(request.clienteName),
-          subtitle: Text(_state[request.state]["title"])
+          title: Text(request.painter.name),
+          subtitle: Text(SolicitationWidget._state[request.situation]["title"])
         );
       },
       body: Padding(
         padding: EdgeInsets.all(10),
         child:Column(
           children: <Widget>[
-            Text(_state[request.state]["description"]),
-            buildLabelDescriptionWidget("Inicio", request.dataInicio),
-            buildLabelDescriptionWidget("Fim", request.dataFim),
+            Text(SolicitationWidget._state[request.situation]["description"]),
+            buildLabelDescriptionWidget("Inicio", request.startDate.toString()),
+            buildLabelDescriptionWidget("Fim", request.endDate.toString()),
             ButtonBar(
               children: <Widget>[
                 IconButton(
@@ -79,8 +98,8 @@ ExpansionPanelListAdapter _buildRequestExpansionPanelListWidget(context){
                     pushNavigator(context, 
                       RequestDetailsWidget(
                         request,
-                        _state[request.state]["title"],
-                        _state[request.state]["description"],
+                        SolicitationWidget._state[request.situation]["title"],
+                        SolicitationWidget._state[request.situation]["description"],
                         _buildAction(request, context)
                       )
                     )
@@ -94,23 +113,23 @@ ExpansionPanelListAdapter _buildRequestExpansionPanelListWidget(context){
   }
 
   Widget _buildAction(Request request, context){
-    if(request.state == "novo")
+    if(request.situation == "novo")
       return _buildNewAction();
-    else if(request.state == "solicitacao-aceita")
+    else if(request.situation == "solicitacao-aceita")
       return _buildRequestAcceptedAction(request);
-    else if(request.state == "orcamento-aceito")
+    else if(request.situation == "orcamento-aceito")
       return _buildAcceptedBudgetAction();
-    else if(request.state == "em-progresso")
+    else if(request.situation == "em-progresso")
       return _buildInProgressAction();
-    else if(request.state == "solicitacao-rejeitada")
+    else if(request.situation == "solicitacao-rejeitada")
       return _buildRequestRejectedAction();
-    else if(request.state == "cancelado-pintor")
+    else if(request.situation == "cancelado-pintor")
       return _buildPainterCanceledAction();
     else 
       return Container();
 
   }
-  
+
   ButtonBar _buildNewAction(){
     ButtonBar actionsBar = new ButtonBar(
       children: <Widget>[
@@ -123,7 +142,7 @@ ExpansionPanelListAdapter _buildRequestExpansionPanelListWidget(context){
   Column _buildRequestAcceptedAction(Request request){
     return Column(
       children: <Widget>[
-        buildLabelDescriptionWidget("Valor", request.value.toString()),
+        buildLabelDescriptionWidget("Valor", request.amount.toString()),
         ButtonBar(
           children: <Widget>[
             RaisedButton(
@@ -149,7 +168,6 @@ ExpansionPanelListAdapter _buildRequestExpansionPanelListWidget(context){
   ButtonBar _buildAcceptedBudgetAction(){
     return _buildNewAction();
   } 
-
 
   ButtonBar _buildInProgressAction(){
      return _buildNewAction();

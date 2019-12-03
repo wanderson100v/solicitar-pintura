@@ -38,6 +38,19 @@ class Painter_model extends CI_Model{
 		return $this->db->get()->row_array();
 	}
 
+    
+    public function read($query){
+        $this->db->select("painter.id, painter.dayli_value, painter.description, client.name, painter.square_meter_value");
+        $this->db->from("painter");
+        $this->db->join("client", "painter.fk_client_id = client.id");
+        $this->db->like('client.name', $query);
+        $this->db->or_like('painter.description', $query);
+        $this->db->or_like('painter.square_meter_value', $query);
+        $this->db->or_like('painter.dayli_value', $query);
+		return $this->db->get()->result_array();
+	}
+
+
     public function update($id, $description ,$dayli_value, $square_meter_value)
     {
         if( $this->db->update('painter', 

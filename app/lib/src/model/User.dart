@@ -23,10 +23,17 @@ class User extends Entity{
     if (res.statusCode == 200) {
       print(res.body);
       Map<String, dynamic> json = jsonDecode(res.body);
-      if(json["type"] == "cliente")
-        return Customer.fromJSON(json["client"]);
-      else if(json["type"] == "pintor")
-        return Painter.fromJSON(json["painter"]);
+      if(json["type"] == "cliente"){
+        Customer customer = Customer.fromJSON(json["client"]);
+        Customer.customerOn = customer;
+        return customer;
+      }
+      else if(json["type"] == "pintor"){
+        Painter painter = Painter.fromJSON(json["painter"]);
+        Painter.painterOn = painter;
+        Customer.customerOn = painter;
+        return painter;
+      }
       else
         return Msg.fromJSON(json);
     }

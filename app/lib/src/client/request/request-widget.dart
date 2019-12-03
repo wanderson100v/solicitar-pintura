@@ -15,26 +15,33 @@ class _RequestWidgetState extends State<RequestWidget> {
 
   static List<Painter> painters;
 
+  TextEditingController _queryFieldController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return buildScaffold(
         "Pintores",
         Column(children: <Widget>[
-          _buildFindConteiner(),
+          _buildFindConteiner(context),
           _buildPainterExpansionListPanel()
         ]));
   }
 
-  Row _buildFindConteiner() {
-    return Row(children: <Widget>[
+  Form _buildFindConteiner(c) {
+    return Form(child: Row(children: <Widget>[
       Expanded(
-          child: buildTextFieldContainer("buscar", validation: "Busca em branco")),
+          child: buildTextFieldContainer("buscar", validation: "Busca em branco", controller: _queryFieldController)),
       IconButton(icon: Icon(Icons.search), onPressed: ()=>
-        setState((){
-          painters = Painter.getAll();
-        })
+          Painter.read(_queryFieldController.text).then((response){
+            setState((){
+              painters = response;
+            });
+          }
+          ).catchError((erro){
+            showMsg(c, "Erro ao buscar pintores");
+          })
       )
-    ]);
+    ]));
   }
 
   Widget _buildPainterExpansionListPanel(){
@@ -73,7 +80,7 @@ class _RequestWidgetState extends State<RequestWidget> {
                 ),
                 IconButton(
                   icon: Icon(Icons.send),
-                  onPressed: () => pushNavigator(context, RequestQuot()),
+                  onPressed: () => pushNavigator(context, RequestQuot(painter)),
                 )
               ]
             )

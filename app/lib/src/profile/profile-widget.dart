@@ -1,24 +1,26 @@
+import 'package:app/src/model/Customer.dart';
 import 'package:app/src/util/widget-factory.dart';
 import 'package:app/src/profile/edit/address-widget.dart';
 import 'package:app/src/profile/edit/edit-widget.dart';
 import 'package:flutter/material.dart';
 
 class ProfileWidget extends StatelessWidget {
- 
+
   @override
   Widget build(BuildContext context) {
     return Container(
         child: Column(children: <Widget>[
           Icon(Icons.person, size: 100, color: Colors.blue),
           _buildProfileEdit(context),
-          buildLabelDescriptionWidget("Telefone", "(99) 99999-9999"),
-          buildLabelDescriptionWidget("Email", "nome@servidor.com"),
+          buildLabelDescriptionWidget("Telefone", Customer.customerOn.telNumber),
+          buildLabelDescriptionWidget("Email",  Customer.customerOn.email),
           _buildAnddressEdit(context),
-          buildLabelDescriptionWidget("CEP", "00000-000"),
-          buildLabelDescriptionWidget("Logradouro", "Tal Rua"),
-          buildLabelDescriptionWidget("Bairro", "Tal Bairro"),
-          buildLabelDescriptionWidget("Cidade", "Serra Talhada"),
-          buildLabelDescriptionWidget("Estado", "PE"),
+          buildLabelDescriptionWidget("CEP", Customer.customerOn.address.zipCode),
+          buildLabelDescriptionWidget("Logradouro", Customer.customerOn.address.street),
+          buildLabelDescriptionWidget("Bairro", Customer.customerOn.address.neighborhood),
+          buildLabelDescriptionWidget("Cidade", Customer.customerOn.address.city),
+          buildLabelDescriptionWidget("Estado", Customer.customerOn.address.state),
+          buildLabelDescriptionWidget("País", Customer.customerOn.address.country),
         ]
       )
     );

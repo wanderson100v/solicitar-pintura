@@ -31,18 +31,18 @@ class _RequestDetailsWidgetState extends State<RequestDetailsWidget> {
               child: Text(widget.title, style: TextStyle(fontSize: 18),),
             ),
             Text(widget.stateDescription),
-            Text(widget.request.clienteName, style : TextStyle(fontSize: 28)),
+            Text(widget.request.customer.name, style : TextStyle(fontSize: 28)),
             Padding(
               padding: EdgeInsets.only(top: 10, bottom: 5),
               child: Text("Período", style: TextStyle(fontSize: 18),),
             ),
-            buildLabelDescriptionWidget("Inicio", widget.request.dataInicio.toString()),
-            buildLabelDescriptionWidget("Fim", widget.request.dataInicio.toString()),
+            buildLabelDescriptionWidget("Inicio", widget.request.startDate.toString()),
+            buildLabelDescriptionWidget("Fim", widget.request.endDate.toString()),
             Padding(
               padding: EdgeInsets.only(top: 10, bottom: 10),
               child: Text("Serão pintados", style: TextStyle(fontSize: 18),),
             ),
-           buildPainterObjectExpansionPanelListWidget(widget.request.paintersObject),
+           buildPainterObjectExpansionPanelListWidget(widget.request.painterObjects),
            widget.actionsWidget
           ],
         )

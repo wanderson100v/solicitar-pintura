@@ -1,5 +1,6 @@
 import 'package:app/src/client/request/details-widget.dart';
 import 'package:app/src/client/request/object-details-widget.dart';
+import 'package:app/src/model/Painter.dart';
 import 'package:app/src/model/PainterObject.dart';
 import 'package:app/src/util/Expansion-panel-list-adapter.dart';
 import 'package:app/src/util/functions.dart';
@@ -7,13 +8,18 @@ import 'package:app/src/util/widget-factory.dart';
 import 'package:flutter/material.dart';
 
 class RequestQuot extends StatefulWidget {
+  
+  final Painter painter;
+
+  const RequestQuot(this.painter);
+
   @override
   _RequestQuotState createState() => _RequestQuotState();
 }
 
 class _RequestQuotState extends State<RequestQuot> {
   
-  List<PainterObject> paintersObject;
+  List<PainterObject> paintersObject = [];
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +37,12 @@ class _RequestQuotState extends State<RequestQuot> {
            _buildPainterObjectExpansionPanelListWidget(),
           RaisedButton(
             child: Text("Próximo"),
-            onPressed: () => pushNavigator(context,DetailsWidget())
+            onPressed: () {
+              if(paintersObject.length > 0)
+                pushNavigator(context, DetailsWidget(widget.painter, paintersObject));
+              else
+                showAlert(context,"Alerta", "É necessário informar o que será pintado");            
+            }
           )
         ]
       )
@@ -72,18 +83,10 @@ class _RequestQuotState extends State<RequestQuot> {
                   children: <Widget>[    
                   Text(painterObject.description),
                   Padding(
-                    padding: EdgeInsets.only(top:10, bottom: 5),
+                    padding: EdgeInsets.only(top:15, bottom: 10),
                     child:Text("Imagem", style: TextStyle(fontSize: 18),)
                   ),
-                  Icon(Icons.image, size: 150,),
-                  Padding(
-                    padding: EdgeInsets.only(top:10, bottom: 5),
-                    child:Text("Cor", style: TextStyle(fontSize: 18),)
-                  ),
-                  Container(
-                    height: 50,
-                    color: Colors.red,
-                  )
+                  (painterObject.image != null)? painterObject.image : Text("Imagem não atribuida"),
               ])),
     );
   }

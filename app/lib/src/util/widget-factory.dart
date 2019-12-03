@@ -1,18 +1,22 @@
 import 'package:flutter/material.dart';
 
 Widget buildTextFieldContainer(String labelText, {bool obscureText = false, String validation = "" ,controller}){
+  dynamic validationFunc;
+  if(validation != "")
+    validationFunc = (value) 
+    {
+      if (value.isEmpty) {
+        return validation;
+      }
+      return null;
+    };
   Padding textFieldContainer = Padding( 
       padding: EdgeInsets.fromLTRB(20,10,20,10),
       child: TextFormField(
         controller: controller,
         obscureText: obscureText,
         decoration: InputDecoration(labelText: labelText),
-        validator: (value) {
-          if (value.isEmpty) {
-            return validation;
-          }
-          return null;
-        },
+        validator: validationFunc
       ),
     );
   return textFieldContainer;

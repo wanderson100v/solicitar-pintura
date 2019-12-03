@@ -78,7 +78,7 @@ class _LoginFormState extends State<LoginForm> {
   _logar(context){
     if(_formKey.currentState.validate()){
         User.singin(_loginFieldController.text,  _passwordFieldController.text)
-        .timeout(const Duration(seconds: 5), onTimeout: ()async=> showMsg(context, "O servidor demorou de mais a reposder"))
+        .timeout(const Duration(seconds: 30), onTimeout: ()async=> showMsg(context, "O servidor demorou de mais a reposder"))
         .then((response){
           if(response is Painter)
             pushReplacementNavigator(context, PainterDashboardWidget());

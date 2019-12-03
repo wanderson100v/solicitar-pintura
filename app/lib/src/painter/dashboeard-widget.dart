@@ -1,4 +1,5 @@
 import 'package:app/src/login-widget.dart';
+import 'package:app/src/model/Painter.dart';
 import 'package:app/src/painter/solicitation/solicitation-widget.dart';
 import 'package:app/src/painter/values/values-widget.dart';
 import 'package:app/src/painter/portfolio/portfolio-widget.dart';
@@ -9,6 +10,7 @@ import "package:bubble_bottom_bar/bubble_bottom_bar.dart";
 
 
 class PainterDashboardWidget extends StatefulWidget {
+    
   @override
   _PainterDashboardWidgetState createState() => _PainterDashboardWidgetState();
 }

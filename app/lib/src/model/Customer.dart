@@ -7,11 +7,12 @@ import 'package:app/src/model/User.dart';
 import 'package:http/http.dart';
 
 class Customer extends User{
+  static Customer customerOn;
   bool active;
   String name;
   String email;
   String telNumber;
-  Address andress;
+  Address address;
 
   Customer();
 
@@ -23,9 +24,15 @@ class Customer extends User{
     this.email = clientJson["email"];
     this.telNumber = clientJson["tel_number"];
     this.login = clientJson["login"];
+    this.address = Address.fromJSON(clientJson['address']);
   }
 
-    Future<Msg> create(String password, String confirmPassowd) async {
+   Customer.fromJSONRequest(Map<String, dynamic>clientJson){   
+    this.name = clientJson["name"];
+  }
+
+
+  Future<Msg> create(String password, String confirmPassowd) async {
     Response res = await post(
       Entity.server+"solicitar-pintura/server/index.php/register/client",
       body: {

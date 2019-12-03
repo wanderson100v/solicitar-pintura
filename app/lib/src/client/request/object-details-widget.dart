@@ -1,3 +1,4 @@
+import 'package:app/src/model/PainterObject.dart';
 import 'package:app/src/util/widget-factory.dart';
 import 'package:flutter/material.dart';
 import 'package:multi_media_picker/multi_media_picker.dart';
@@ -16,9 +17,13 @@ class _ObjectDetailsWidgetState extends State<ObjectDetailsWidget> {
   
   final  _formKey = GlobalKey<FormState>();
 
-  Image _image;
+  TextEditingController _titleFC = TextEditingController();
 
-  Color _color;
+  TextEditingController _descriptionFC = TextEditingController();
+
+  TextEditingController _squareMeterFC = TextEditingController();
+
+  Image _image;
 
   @override
   Widget build(BuildContext context) {
@@ -35,28 +40,26 @@ class _ObjectDetailsWidgetState extends State<ObjectDetailsWidget> {
       key: _formKey,
       child: Column(
         children: <Widget>[
-          buildTextFieldContainer("Titulo", validation :"Titulo não informado"),
-          buildTextFieldContainer("Descrição", validation :"Descrição do que deve ser feito em está vazia"),
+          buildTextFieldContainer("Titulo", validation :"Titulo não informado", controller: _titleFC),
+          buildTextFieldContainer("Descrição", validation :"Descrição do que deve ser feito em está vazia", controller: _descriptionFC),
+          buildTextFieldContainer("Tamenho em metros quadrados", controller: _squareMeterFC),
           Padding(
-            padding: EdgeInsets.symmetric(vertical: 10),
-            child : Row(children: <Widget>[
-                Center(child: Text("Imagem", style:  TextStyle(fontSize: 20),)),
+            padding: EdgeInsets.symmetric(vertical: 20),
+            child : Center(child:Row(children: <Widget>[
+                Expanded(child:Container()),
+                Center(child: Text("Imagem", style:  TextStyle(fontSize: 18),)),
                 IconButton(
                   icon: Icon(Icons.add_a_photo),
                   onPressed: getImage
-                )
-              ],
+                ),
+                Expanded(child:Container())
+              ],)
             ),
           ),
           _buildImageWiget(),
           Padding(
-            padding: EdgeInsets.symmetric(vertical: 10),
-            child :Center(child: Text("Cor", style:  TextStyle(fontSize: 20),)),
-          ),
-          _buildColorWiget(),
-          Padding(
             padding: const EdgeInsets.symmetric(vertical: 16.0),
-            child: Row(children: <Widget>[
+            child: ButtonBar(children: <Widget>[
               RaisedButton(
                 onPressed: () {
                   Navigator.of(context).pop();
@@ -65,8 +68,10 @@ class _ObjectDetailsWidgetState extends State<ObjectDetailsWidget> {
               ),
               RaisedButton(
                 onPressed: () {
-                 //  widget.addPainterObject(PainterObject(title, description, image, color));
-                   Navigator.of(context).pop();
+                  if(_formKey.currentState.validate()){
+                    widget.addPainterObject(PainterObject(_titleFC.text, _descriptionFC.text, squareMeter: double.parse(_squareMeterFC.text) , image: _image));
+                    Navigator.of(context).pop();
+                  }
                 },
                 child: Text('confirmar'),
               ),
@@ -83,16 +88,6 @@ class _ObjectDetailsWidgetState extends State<ObjectDetailsWidget> {
       return _image;
     else
       return Text("Nenhuma imagem definida");
-  }
-
-   Widget _buildColorWiget(){
-    if(_color != null)
-      return Container(
-        height: 50,
-        color: _color
-      );
-    else
-      return Text("Nenhuma cor definida");
   }
 
   Future getImage() async {

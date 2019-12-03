@@ -14,17 +14,38 @@ class request_model extends CI_Model{
 
     public function read_fk_client_id($id)
     {
-        $this->db->select("*");
+        $this->db->select("request.*,  client.name, address.zip_code,
+            address.zip_code,  address.street,  address.neighborhood,
+            address.city,  address.state, address.country");
         $this->db->from("request");
+        $this->db->join("address", "address.id = request.fk_address_id");
+        $this->db->join("painter", "painter.id = request.fk_painter_id");
+        $this->db->join("client", "client.id = painter.fk_client_id");
         $this->db->where('request.fk_client_id', $id);
+        $this->db->or_where("situation", "novo");
+        $this->db->or_where("situation", "solicitacao-aceita");
+        $this->db->or_where("situation", "orcamento-aceito");
+        $this->db->or_where("situation", "em-progresso");
+        $this->db->or_where("situation", "solicitacao-rejeitada");
+        $this->db->or_where("situation", "cancelado-pintor");
 		return $this->db->get()->result_array();
     }
     
     public function read_fk_painter_id($id)
     {
-        $this->db->select("*");
+        $this->db->select("request.*,  client.name,  address.zip_code,
+            address.zip_code,  address.street,  address.neighborhood,
+            address.city,  address.state, address.country");
         $this->db->from("request");
+        $this->db->join("address", "address.id = request.fk_address_id");
+        $this->db->join("client", "client.id = request.fk_client_id");
         $this->db->where('request.fk_painter_id', $id);
+        $this->db->or_where("situation", "novo");
+        $this->db->or_where("situation", "solicitacao-aceita");
+        $this->db->or_where("situation", "orcamento-aceito");
+        $this->db->or_where("situation", "em-progresso");
+        $this->db->or_where("situation", "orcamento-rejeitado");
+        $this->db->or_where("situation", "cancelado-cliente");
 		return $this->db->get()->result_array();
     }
 
@@ -34,7 +55,8 @@ class request_model extends CI_Model{
         $this->start_date = $start_date;
         $this->fk_client_id = $fk_client_id;
         $this->fk_painter_id = $fk_painter_id;
-        $this->fk_address_id = $fk_address_id
+        $this->fk_address_id = $fk_address_id;
+        $this->situation = "novo";
         if($this->db->insert('request', $this))
         {
             $this->id = $this->db->insert_id();

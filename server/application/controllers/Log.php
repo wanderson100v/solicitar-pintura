@@ -13,8 +13,13 @@ class Log extends CI_Controller {
       $password = $this->input->post("password");
 
       $this->load->model("client_model");
+      $this->load->model("address_model");
+      $this->load->model("contact_model");
       $client  = $this->client_model->login($login, md5($password));
       if($client != null){
+        $client["address"] = $this->address_model->read_id($client["FK_ADDRESS_id"]);
+        $client["email"] = $this->contact_model->read_fk_client_id_type($client["id"],"email");
+        $client["tel_number"] = $this->contact_model->read_fk_client_id_type($client["id"], "telefone");
         if($client['type'] == "cliente")
             echo json_encode(array("type"=> "cliente", "client" => $client));
         else if($client['type'] == "pintor"){

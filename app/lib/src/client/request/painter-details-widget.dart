@@ -6,6 +6,7 @@ import 'package:app/src/util/widget-factory.dart';
 import 'package:flutter/material.dart';
 
 class PainterDetailsWidget extends StatefulWidget {
+  
   final Painter painter;
 
   PainterDetailsWidget(this.painter);
@@ -20,7 +21,7 @@ class _PainterDetailsWidgetState extends State<PainterDetailsWidget> {
     return buildScaffold("Detalhes Pintor",
       Column(
           children: <Widget>[
-            Text(/*widget.painter.name*/ "zé", style : TextStyle(fontSize: 28)),
+            Text(widget.painter.name, style : TextStyle(fontSize: 28)),
             Padding(
               padding: EdgeInsets.only(top: 10, bottom: 5),
               child: Text("Valores cobrados", style: TextStyle(fontSize: 18),),
@@ -37,7 +38,7 @@ class _PainterDetailsWidgetState extends State<PainterDetailsWidget> {
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.send),
         onPressed: (){
-          Navigator.of(context).push(MaterialPageRoute(builder:(context)=>RequestQuot()));
+          Navigator.of(context).push(MaterialPageRoute(builder:(context)=>RequestQuot(widget.painter)));
         },
       ),
     );
