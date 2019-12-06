@@ -21,6 +21,8 @@ class Painter_model extends CI_Model{
     {
         $this->fk_client_id = $fk_client_id;
         $this->description = $description;
+        $this->dayli_value = 0.0;
+        $this->square_meter_value = 0.0;
         
         if($this->db->insert('painter', $this))
         {
